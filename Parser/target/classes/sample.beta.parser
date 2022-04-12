@@ -1,0 +1,22 @@
+
+VAL
+| number
+| ( EXPR2 )
+
+EXPR1
+| VAL EXPR1_
+
+EXPR1_
+|
+| * VAL EXPR1_
+| / VAL EXPR1_
+
+EXPR2
+| EXPR1 EXPR2_
+
+EXPR2_
+| + EXPR1 EXPR2_
+| - EXPR1 EXPR2_
+
+PROGRAM
+| EXPR2
