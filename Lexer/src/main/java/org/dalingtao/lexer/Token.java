@@ -19,6 +19,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return getToken() + "(" + getBody() + ")";
+        return getToken() + "=" + getBody();
     }
 }

@@ -56,7 +56,7 @@ public class LexerCompiler {
             String left = line.substring(0, index);
             String right = line.substring(index + 1);
             String tokenName = left;
-            if (left.startsWith("@") || left.startsWith("*")) {
+            if (left.startsWith("@")) {
                 tokenName = tokenName.substring(1);
             }
             if (tokeNameSet.contains(tokenName)) {

@@ -16,13 +16,13 @@ public class Lexer {
         System.out.println(data);
     }
 
-    static List<Token> loadSample() throws IOException {
+    public static List<Token> loadSample() throws IOException {
         byte[] data = LexerCompiler.loadSample();
         var lexer = new Lexer(new ByteArrayInputStream(data));
         try (var is = Lexer.class.getClassLoader().getResourceAsStream("sample.code")) {
             String content = IOUtil.readAll(is, StandardCharsets.ISO_8859_1);
             System.out.println("sample.code:\n" + content);
-            return lexer.lexer(content, false);
+            return lexer.lexer(content, true);
         }
     }
 
@@ -62,6 +62,7 @@ public class Lexer {
             }
             i = index;
         }
+        ans.add(new Token("eof", ""));
         return ans;
     }
 }

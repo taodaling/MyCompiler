@@ -1,6 +1,9 @@
-@Comment=//[^\r\n]*
-@Blank=[\n\r\b\t ]+
-Number=-?(0|[1-9][0-9]*)
-Operator=[+\-*/]
-LeftRoundBracket=\(
-RightRoundBracket=\)
+@comment=//[^\r\n]*
+@blank=[\n\r\b\t ]+
+number=-?(0|[1-9][0-9]*)
++=\+
+-=-
+*=\*
+/=/
+(=\(
+)=\)

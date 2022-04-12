@@ -1,14 +1,18 @@
 package org.dalingtao;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IOUtil {
     public static String readAll(InputStream is, Charset charset) throws IOException {
@@ -51,5 +55,18 @@ public class IOUtil {
 
     public static void writeAll(String file, byte[] data) throws IOException {
         writeAll(new File(file), data);
+    }
+
+    public static List<String> readLines(InputStream is, Charset charset, boolean skipBlankLine) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, charset));
+        List<String> ans = new ArrayList<>();
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (line.isBlank() && skipBlankLine) {
+                continue;
+            }
+            ans.add(line);
+        }
+        return ans;
     }
 }

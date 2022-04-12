@@ -14,13 +14,24 @@ public class StreamReader {
     }
 
     public String read() throws IOException {
-        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-            tokenizer = new StringTokenizer(is.readLine());
+        if (!hasMore()) {
+            throw new IOException("No more token");
         }
         return tokenizer.nextToken();
     }
 
     public int readInt() throws IOException {
         return Integer.parseInt(read());
+    }
+
+    public boolean hasMore() throws IOException {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            String line = is.readLine();
+            if (line == null) {
+                return false;
+            }
+            tokenizer = new StringTokenizer(line);
+        }
+        return true;
     }
 }

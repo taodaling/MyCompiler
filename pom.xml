@@ -12,6 +12,7 @@
     <modules>
         <module>RE</module>
         <module>Lexer</module>
+        <module>Parser</module>
         <module>util</module>
     </modules>
 
@@ -35,6 +36,16 @@
             <dependency>
                 <groupId>org.dalingtao</groupId>
                 <artifactId>RE</artifactId>
+                <version>${global.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dalingtao</groupId>
+                <artifactId>Lexer</artifactId>
+                <version>${global.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dalingtao</groupId>
+                <artifactId>Parser</artifactId>
                 <version>${global.version}</version>
             </dependency>
         </dependencies>
