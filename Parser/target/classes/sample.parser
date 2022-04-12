@@ -1,39 +1,17 @@
-#VAL
-#| number
-#| ( EXPR )
-#
-#EXPR
-#| VAL OP_EXPR
-#
-#OP_EXPR
-#|
-#| + EXPR
-#| - EXPR
-#| * EXPR
-#| / EXPR
-#
-#PROGRAM
-#| EXPR
-
 VAL
 | number
 | ( EXPR2 )
 
 EXPR1
-| VAL EXPR1_
-
-EXPR1_
-|
-| * VAL EXPR1_
-| / VAL EXPR1_
+| VAL
+| EXPR1 * VAL
+| EXPR1 / VAL
 
 EXPR2
-| EXPR1 EXPR2_
+| EXPR1
+| EXPR2 + EXPR1
+| EXPR2 - EXPR1
 
-EXPR2_
-|
-| + EXPR1 EXPR2_
-| - EXPR1 EXPR2_
 
 PROGRAM
 | EXPR2

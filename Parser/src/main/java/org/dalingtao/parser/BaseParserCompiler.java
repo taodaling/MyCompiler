@@ -5,6 +5,7 @@ import org.dalingtao.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 //A
 //| B C D
 //| A C D
-public class BaseParserCompiler {
+public abstract class BaseParserCompiler {
     List<Terminal> terminals = new ArrayList<>();
     List<NonTerminal> nonTerminals = new ArrayList<>();
     List<Production> productions = new ArrayList<>();
@@ -40,6 +41,15 @@ public class BaseParserCompiler {
         calcNullable();
         calcFirst();
         calcFollow();
+        for (int i = 0; i < terminals.size(); i++) {
+            terminals.get(i).id = i;
+        }
+        for (int i = 0; i < nonTerminals.size(); i++) {
+            nonTerminals.get(i).id = i + terminals.size();
+        }
+        for (int i = 0; i < productions.size(); i++) {
+            productions.get(i).id = i;
+        }
     }
 
     void addProduction(NonTerminal nt, Symbol... terminals) {
@@ -70,7 +80,7 @@ public class BaseParserCompiler {
             nonTerminals.add(nt);
             terminalRegistry.put(nt.name, nt);
 
-           addProduction(nt, terminalRegistry.get("PROGRAM"), getSymbol("eof"));
+            addProduction(nt, terminalRegistry.get("PROGRAM"), getSymbol("eof"));
         }
 
         NonTerminal built = null;
@@ -175,4 +185,6 @@ public class BaseParserCompiler {
             }
         }
     }
+
+    public abstract void compile(OutputStream os);
 }

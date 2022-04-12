@@ -23,15 +23,6 @@ public class ParserCompilerLL extends BaseParserCompiler {
     public void compile(OutputStream os) {
         int m = nonTerminals.size();
         int n = terminals.size();
-        for (int i = 0; i < n; i++) {
-            terminals.get(i).id = i;
-        }
-        for (int i = 0; i < m; i++) {
-            nonTerminals.get(i).id = i + n;
-        }
-        for (int i = 0; i < productions.size(); i++) {
-            productions.get(i).id = i;
-        }
         //int[][] table = new int[m][n];
         Production[][] table = new Production[m][n];
 //        for (int i = 0; i < m; i++) {
@@ -91,7 +82,7 @@ public class ParserCompilerLL extends BaseParserCompiler {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 ps.print(table[i][j] == null ? -1 : table[i][j].id);
-                ps.print(" ");
+                ps.print("\t");
             }
             ps.println();
         }

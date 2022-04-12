@@ -12,11 +12,11 @@ import java.util.List;
 
 public class Lexer {
     public static void main(String[] args) throws IOException {
-        List<Token> data = loadSample();
+        List<Token> data = loadSample().tokens;
         System.out.println(data);
     }
 
-    public static List<Token> loadSample() throws IOException {
+    public static TokenSequence loadSample() throws IOException {
         byte[] data = LexerCompiler.loadSample();
         var lexer = new Lexer(new ByteArrayInputStream(data));
         try (var is = Lexer.class.getClassLoader().getResourceAsStream("sample.code")) {
@@ -32,11 +32,11 @@ public class Lexer {
         dfa = new LexerDfa(is);
     }
 
-    public List<Token> lexer(String data) {
+    public TokenSequence lexer(String data) {
         return lexer(data, true);
     }
 
-    public List<Token> lexer(String data, boolean skipIgnore) {
+    public TokenSequence lexer(String data, boolean skipIgnore) {
         List<Token> ans = new ArrayList<>();
         int n = data.length();
         for (int i = 0; i < n; i++) {
@@ -58,11 +58,11 @@ public class Lexer {
                 throw new LexerException("Can't lexer with substr start at " + i);
             }
             if (!(ignore && skipIgnore)) {
-                ans.add(new Token(lastToken, data.substring(i, index + 1)));
+                ans.add(new Token(lastToken, data.substring(i, index + 1), i, index + 1));
             }
             i = index;
         }
-        ans.add(new Token("eof", ""));
-        return ans;
+        ans.add(new Token("eof", "", n, n));
+        return new TokenSequence(ans, data);
     }
 }

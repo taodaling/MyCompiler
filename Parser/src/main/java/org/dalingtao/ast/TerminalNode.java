@@ -11,7 +11,7 @@ public class TerminalNode implements AstNode {
 
     @Override
     public Object eval(Context context) {
-        return token.getBody();
+        return token.getToken();
     }
 
     @Override
@@ -21,6 +21,6 @@ public class TerminalNode implements AstNode {
 
     @Override
     public String toString() {
-        return "<T>" + token.getBody() + "</T>";
+        return "<T>" + token.getToken().getBody() + "</T>";
     }
 }

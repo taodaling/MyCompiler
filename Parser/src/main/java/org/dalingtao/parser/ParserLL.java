@@ -5,6 +5,7 @@ import org.dalingtao.ast.AstNode;
 import org.dalingtao.ast.TerminalNode;
 import org.dalingtao.lexer.Lexer;
 import org.dalingtao.lexer.Token;
+import org.dalingtao.lexer.TokenSequence;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -70,18 +71,18 @@ public class ParserLL {
     }
 
 
-    public AstNode parse(List<Token> tokens) {
+    public AstNode parse(TokenSequence tokenSequence) {
         Parser parser = new Parser();
-        parser.tokens = tokens.stream().map(token -> {
+        parser.tokens = tokenSequence.getTokens().stream().map(token -> {
             TerminalToken tt = new TerminalToken();
-            tt.body = token.getBody();
+            tt.token = token;
             tt.terminal = terminalMap.get(token.getToken());
             if (tt.terminal == null) {
                 throw new ParserException("Unknown token [" + token + "]");
             }
             return tt;
         }).collect(Collectors.toList());
-        System.out.println(parser.tokens);
+        //System.out.println(parser.tokens);
 
         Symbol prog = Arrays.stream(nonTerminals).filter(x -> x.name().equals("PROGRAM$")).findFirst().orElseThrow();
         return parser.dfs(prog);

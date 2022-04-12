@@ -1,8 +1,10 @@
 package org.dalingtao.parser;
 
+import org.dalingtao.lexer.Token;
+
 public class TerminalToken {
     Terminal terminal;
-    String body;
+    Token token;
 
     public Terminal getTerminal() {
         return terminal;
@@ -12,16 +14,13 @@ public class TerminalToken {
         this.terminal = terminal;
     }
 
-    public String getBody() {
-        return body;
-    }
 
-    public void setBody(String body) {
-        this.body = body;
+    public Token getToken() {
+        return token;
     }
 
     @Override
     public String toString() {
-        return terminal.toString() + "=" + body;
+        return token.toString();
     }
 }
