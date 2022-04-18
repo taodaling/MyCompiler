@@ -1,0 +1,6 @@
+package {packageName};
+import org.dalingtao.ast.NonTerminalNode;
+
+public abstract class {ClassName} {
+    {Content}
+}

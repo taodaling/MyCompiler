@@ -1,0 +1,42 @@
+: classFile = org.dalingtao.sa.sample.ast.MinJavaSemantics
+
+INTEGER
+| int
+
+BOOLEAN
+| boolean
+
+VAL
+| INTEGER
+| VAR
+| ( EXPR )
+| BOOLEAN
+
+TYPE
+| id
+
+EXPR
+| VAL
+| EXPR + VAL
+
+SET
+| VAR eq EXPR
+
+VAR
+| id
+
+VAR_DEF
+| TYPE VAR
+| TYPE SET
+
+STATEMENT
+| VAR_DEF ;
+| SET ;
+| { STATEMENTS }
+
+STATEMENTS
+| STATEMENT STATEMENTS
+|
+
+PROGRAM
+| STATEMENTS

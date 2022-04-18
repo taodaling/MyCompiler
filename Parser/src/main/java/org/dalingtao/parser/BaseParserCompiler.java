@@ -2,6 +2,7 @@ package org.dalingtao.parser;
 
 import org.dalingtao.IOUtil;
 import org.dalingtao.StringUtil;
+import org.dalingtao.re.ParseCompileException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,14 +19,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 //A
-//| B C D
-//| A C D
+//| cls | B C D
+//| cls | A C D
 public abstract class BaseParserCompiler {
     List<Terminal> terminals = new ArrayList<>();
     List<NonTerminal> nonTerminals = new ArrayList<>();
     List<Production> productions = new ArrayList<>();
     Map<String, Symbol> terminalRegistry = new HashMap<>();
-
+    Map<String, String> properties = new HashMap<>();
 
     Symbol getSymbol(String s) {
         return terminalRegistry.computeIfAbsent(s, x -> {
@@ -56,7 +57,6 @@ public abstract class BaseParserCompiler {
         Production production = new Production();
         production.left = nt;
         production.right = Arrays.asList(terminals);
-
         productions.add(production);
         nt.productions.add(production);
     }
@@ -64,6 +64,16 @@ public abstract class BaseParserCompiler {
     void load(InputStream is) throws IOException {
         List<List<String>> lines = IOUtil.readLines(is, StandardCharsets.ISO_8859_1, true)
                 .stream().filter(x -> !x.startsWith("#")).map(StringUtil::split).collect(Collectors.toList());
+        lines.stream().filter(x -> x.get(0).equals(":"))
+                .forEach(x -> {
+                    if (x.size() != 4 || !x.get(2).equals("=")) {
+                        throw new ParseCompileException(": name = value");
+                    }
+                    String name = x.get(1);
+                    String value = x.get(3);
+                    properties.put(name, value);
+                });
+        lines = lines.stream().filter(x -> !x.get(0).equals(":")).collect(Collectors.toList());
         lines.stream().filter(x -> !x.get(0).equals("|"))
                 .forEach(x -> {
                     String name = x.get(0);
@@ -73,6 +83,7 @@ public abstract class BaseParserCompiler {
                     nonTerminals.add(nt);
                     terminalRegistry.put(nt.name, nt);
                 });
+
 
         {
             NonTerminal nt = new NonTerminal();
@@ -87,13 +98,13 @@ public abstract class BaseParserCompiler {
         for (List<String> line : lines) {
             if (!line.get(0).equals("|")) {
                 if (line.size() != 1) {
-                    throw new ParserException("E\n| E + E \n| num");
+                    throw new ParseCompileException("E\n| E + E \n| num");
                 }
                 built = (NonTerminal) terminalRegistry.get(line.get(0));
                 continue;
             }
             if (built == null) {
-                throw new ParserException("E\n| E + E \n| num");
+                throw new ParseCompileException("E\n| E + E \n| num");
             }
             addProduction(built, line.stream().skip(1).map(this::getSymbol).toArray(n -> new Symbol[n]));
         }
@@ -186,5 +197,5 @@ public abstract class BaseParserCompiler {
         }
     }
 
-    public abstract void compile(OutputStream os);
+    public abstract void compile(OutputStream os) throws IOException;
 }

@@ -1,11 +1,12 @@
 package org.dalingtao.lexer;
 
+import org.dalingtao.Context;
 import org.dalingtao.IOUtil;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,13 @@ public class Lexer {
         }
     }
 
+    public static Lexer fromRule(String content) throws IOException {
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        LexerCompiler.compile(content, 128, bao);
+        return new Lexer(new ByteArrayInputStream(bao.toByteArray()));
+    }
+
+
     LexerDfa dfa;
 
     public Lexer(InputStream is) throws IOException {
@@ -37,6 +45,7 @@ public class Lexer {
     }
 
     public TokenSequence lexer(String data, boolean skipIgnore) {
+        Context.getInstance().setCode(data);
         List<Token> ans = new ArrayList<>();
         int n = data.length();
         for (int i = 0; i < n; i++) {
@@ -55,7 +64,7 @@ public class Lexer {
                 }
             }
             if (lastToken == null) {
-                throw new LexerException("Can't lexer with substr start at " + i);
+                throw new LexerException(i, Math.min(i + 10, data.length()));
             }
             if (!(ignore && skipIgnore)) {
                 ans.add(new Token(lastToken, data.substring(i, index + 1), i, index + 1));

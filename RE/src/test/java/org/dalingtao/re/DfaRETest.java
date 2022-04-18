@@ -5,8 +5,6 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.*;
-
 public class DfaRETest {
 
     void assertState(String pattern, String s, boolean val) {
@@ -81,7 +79,7 @@ public class DfaRETest {
         Assert.assertTrue(fastTest(".", "a"));
     }
 
-    @Test(expected = ParseException.class)
+    @Test(expected = ParseCompileException.class)
     public void _test4() {
         Assert.assertTrue(fastTest("?", ""));
     }

@@ -1,6 +1,7 @@
 package org.dalingtao.parser;
 
 import org.dalingtao.IOUtil;
+import org.dalingtao.re.ParseCompileException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,12 +12,12 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 public class ParserCompilerLL extends BaseParserCompiler {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println(loadSample());
     }
 
 
-    public ParserCompilerLL(InputStream is) throws IOException {
+    public ParserCompilerLL(InputStream is) throws IOException, ClassNotFoundException {
         super(is);
     }
 
@@ -35,7 +36,7 @@ public class ParserCompilerLL extends BaseParserCompiler {
             for (Production p : nt.productions) {
                 for (var s : first(p.right)) {
                     if (table[i][s.id()] != null) {
-                        throw new ParserException("Invalid LL(1) grammar => [" + table[i][s.id()] + "] collide with [" + p + "]");
+                        throw new ParseCompileException("Invalid LL(1) grammar => [" + table[i][s.id()] + "] collide with [" + p + "]");
                     }
                     table[i][s.id()] = p;
                 }
@@ -43,7 +44,7 @@ public class ParserCompilerLL extends BaseParserCompiler {
                     //throw new RuntimeException();
                     for (var s : p.left.follow()) {
                         if (table[i][s.id()] != null) {
-                            throw new ParserException("Invalid LL(1) grammar => [" + table[i][s.id()] + "] collide with [" + p + "]");
+                            throw new ParseCompileException("Invalid LL(1) grammar => [" + table[i][s.id()] + "] collide with [" + p + "]");
                         }
                         table[i][s.id()] = p;
                     }
@@ -57,7 +58,14 @@ public class ParserCompilerLL extends BaseParserCompiler {
         ps.print(n);
         ps.print(" ");
         ps.print(productions.size());
+        ps.print(" ");
+        ps.print(properties.size());
         ps.println();
+        for (var entry : properties.entrySet()) {
+            ps.print(entry.getKey());
+            ps.print(" ");
+            ps.println(entry.getValue());
+        }
         for (var symbol : nonTerminals) {
             ps.print(symbol.name);
             ps.print(" ");
@@ -89,7 +97,7 @@ public class ParserCompilerLL extends BaseParserCompiler {
         ps.flush();
     }
 
-    public static String loadSample() throws IOException {
+    public static String loadSample() throws IOException, ClassNotFoundException {
         try (var is = ParserCompilerLL.class.getClassLoader().getResourceAsStream("sample.parser")) {
             String content = IOUtil.readAll(is, StandardCharsets.ISO_8859_1);
             System.out.println("sample.parser:\n" + content);

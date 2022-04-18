@@ -1,7 +1,9 @@
 package org.dalingtao.lexer;
 
-public class LexerException extends RuntimeException {
-    public LexerException(String message) {
-        super(message);
+import org.dalingtao.InputException;
+
+public class LexerException extends InputException {
+    public LexerException(int begin, int end) {
+        super("Lexer error", begin, end);
     }
 }

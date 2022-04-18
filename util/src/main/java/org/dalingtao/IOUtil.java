@@ -25,6 +25,17 @@ public class IOUtil {
         return bis.toString(charset);
     }
 
+    public static String readClassResource(String path, Charset charset, ClassLoader loader) throws IOException {
+        try (var is = loader.getResourceAsStream(path)) {
+            return readAll(is, charset);
+        }
+    }
+
+    public static String readApplicationClassResource(String path, Charset charset) throws IOException {
+        return readClassResource(path, charset, IOUtil.class.getClassLoader());
+    }
+
+
     public static String readAll(File file, Charset charset) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             return readAll(fis, charset);

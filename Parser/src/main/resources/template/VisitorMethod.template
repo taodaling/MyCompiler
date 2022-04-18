@@ -1,0 +1,12 @@
+/**
+ * {Comment}
+ */
+ default T visit{ClassName}(Visitable visitable) {
+    T ans = null;
+    for(var node : visitable) {
+        if(node instanceof Visitable) {
+            ans = ((Visitable)node).accept(this);
+        }
+    }
+    return ans;
+ }

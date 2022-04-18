@@ -106,7 +106,7 @@ public class REParser {
     }
 
     void throwException(String s) {
-        throw new ParseException("Unexpected token at " + offset + ": " + s);
+        throw new ParseCompileException("Unexpected token at " + offset + ": " + s);
     }
 
     void assertEq(int v) {

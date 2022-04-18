@@ -1,0 +1,9 @@
+public static abstract class Visitable extends NonTerminalNode {
+    public Object item;
+
+    public abstract <T> T accept(Visitor<T> visitor);
+
+    public Visitable getVisitable(int i) {
+        return (Visitable) get(i);
+    }
+}

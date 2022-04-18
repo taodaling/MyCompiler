@@ -1,0 +1,11 @@
+/**
+ * {Comment}
+ */
+public static class {ClassName} extends {FatherClassName} {
+    public {ClassName} get() {
+        return new {ClassName}();
+    }
+    public<T> T accept(Visitor<T> visitor) {
+        return visitor.visit{ClassName}(this);
+    }
+}

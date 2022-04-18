@@ -1,3 +1,6 @@
+: classFile = org.dalingtao.sample.Factory
+
+
 VAL
 | number
 | ( EXPR2 )

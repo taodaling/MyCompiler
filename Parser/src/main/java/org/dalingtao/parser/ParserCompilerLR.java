@@ -1,7 +1,7 @@
 package org.dalingtao.parser;
 
 import org.dalingtao.IOUtil;
-import org.dalingtao.re.ParseException;
+import org.dalingtao.re.ParseCompileException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ParserCompilerLR extends BaseParserCompiler {
-    public ParserCompilerLR(InputStream is) throws IOException {
+    public ParserCompilerLR(InputStream is) throws IOException, ClassNotFoundException {
         super(is);
         E = new ArrayList<>();
         R = new ArrayList<>();
@@ -139,7 +139,7 @@ public class ParserCompilerLR extends BaseParserCompiler {
             for (var item : I) {
                 if (item.nextSymbol() == null) {
                     if (R.get(i)[item.next.id()] != null) {
-                        throw new ParseException("Invalid LR(1) grammar : duplicate reduce command");
+                        throw new ParseCompileException("Invalid LR(1) grammar : duplicate reduce command");
                     }
                     R.get(i)[item.next.id()] = item.p;
                 }
@@ -160,7 +160,14 @@ public class ParserCompilerLR extends BaseParserCompiler {
         ps.print(productions.size());
         ps.print(" ");
         ps.println(items.size());
+        ps.print(" ");
+        ps.print(properties.size());
         ps.println();
+        for (var entry : properties.entrySet()) {
+            ps.print(entry.getKey());
+            ps.print(" ");
+            ps.println(entry.getValue());
+        }
         for (var symbol : nonTerminals) {
             ps.print(symbol.name);
             ps.print(" ");
@@ -198,7 +205,7 @@ public class ParserCompilerLR extends BaseParserCompiler {
                 var e = E.get(i)[j];
                 var r = R.get(i)[j];
                 if (e != -1 && r != null) {
-                    throw new ParseException("Invalid LR(1) grammar : collision between goto and reduce command");
+                    throw new ParseCompileException("Invalid LR(1) grammar : collision between goto and reduce command");
                 }
                 if (accept) {
                     ps.print('a');
@@ -223,11 +230,11 @@ public class ParserCompilerLR extends BaseParserCompiler {
         ps.flush();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println(loadSample());
     }
 
-    public static String loadSample() throws IOException {
+    public static String loadSample() throws IOException, ClassNotFoundException {
         try (var is = ParserCompilerLR.class.getClassLoader().getResourceAsStream("sample.parser")) {
             String content = IOUtil.readAll(is, StandardCharsets.ISO_8859_1);
             System.out.println("sample.parser:\n" + content);

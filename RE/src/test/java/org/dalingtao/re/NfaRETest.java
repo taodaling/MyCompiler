@@ -103,7 +103,7 @@ public class NfaRETest {
         Assert.assertTrue(fastTest(".", "a"));
     }
 
-    @Test(expected = ParseException.class)
+    @Test(expected = ParseCompileException.class)
     public void _test4() {
         Assert.assertTrue(fastTest("?", ""));
     }

@@ -8,10 +8,8 @@ import org.dalingtao.re.REParser;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,7 +49,7 @@ public class LexerCompiler {
             }
             int index = line.indexOf('=');
             if (index == -1) {
-                throw new LexerException("Can't compile " + lineNumber + "-th line");
+                throw new LexerCompileException("Can't compile " + lineNumber + "-th line");
             }
             String left = line.substring(0, index);
             String right = line.substring(index + 1);
@@ -60,7 +58,7 @@ public class LexerCompiler {
                 tokenName = tokenName.substring(1);
             }
             if (tokeNameSet.contains(tokenName)) {
-                throw new LexerException("Duplicate token: " + tokenName);
+                throw new LexerCompileException("Duplicate token: " + tokenName);
             }
             Unit unit = new Unit(tokenName, right);
             unit.ignore = left.startsWith("@");
