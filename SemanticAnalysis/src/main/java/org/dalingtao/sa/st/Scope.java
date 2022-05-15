@@ -2,13 +2,10 @@ package org.dalingtao.sa.st;
 
 public class Scope implements Cloneable {
     PersistentArray<Identifier> pa;
+    FunctionDef function;
 
-    public Scope(Scope superScope) {
-        if (superScope == null) {
-            pa = new PersistentArray<>();
-        } else {
-            pa = pa.clone();
-        }
+    public Scope() {
+        pa = new PersistentArray<>();
     }
 
     public Identifier get(int id) {
@@ -17,6 +14,15 @@ public class Scope implements Cloneable {
 
     public void set(int id, Identifier identifier) {
         pa.set(id, identifier);
+    }
+
+
+    public FunctionDef getFunction() {
+        return function;
+    }
+
+    public void setFunction(FunctionDef function) {
+        this.function = function;
     }
 
     @Override

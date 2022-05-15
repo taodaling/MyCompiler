@@ -1,0 +1,23 @@
+<ASM>
+    <Module>
+        <Func>add</Func>
+        <Body>mov T15 rbx# T15#rbxmov T16 rbp# T16#rbpmov T17 rdi# T17#rdimov T18 rsi# T18#rsimov T19 r12# T19#r12mov
+            T20 r13# T20#r13mov T21 r14# T21#r14mov T22 r15# T22#r15mov T4 rcx# T4#rcxmov T5 rdx# T5#rdxmov T9 T4#
+            T9#T4mov T24 T9# T24#T9add T24 T5# T24#T24,T5mov T10 T24# T10#T24mov rbx T15# rbx#T15mov rbp T16# rbp#T16mov
+            rdi T17# rdi#T17mov rsi T18# rsi#T18mov r12 T19# r12#T19mov r13 T20# r13#T20mov r14 T21# r14#T21mov r15 T22#
+            r15#T22mov rax T10# rax#T10ret# #rax
+        </Body>
+    </Module>
+    <Module>
+        <Func>main</Func>
+        <Body>mov T26 rbx# T26#rbxmov T27 rbp# T27#rbpmov T28 rdi# T28#rdimov T29 rsi# T29#rsimov T30 r12# T30#r12mov
+            T31 r13# T31#r13mov T32 r14# T32#r14mov T33 r15# T33#r15mov T11 1# T11#1mov T12 2# T12#2mov T36 rax#
+            T36#raxmov T37 rcx# T37#rcxmov T38 rdx# T38#rdxmov T39 r8# T39#r8mov T40 r9# T40#r9mov T41 r10# T41#r10mov
+            T42 r11# T42#r11mov rcx T11# rcx#T11mov rdx T12# rdx#T12call add# #mov T43 rax# T43#raxmov rax T36#
+            rax#T36mov rcx T37# rcx#T37mov rdx T38# rdx#T38mov r8 T39# r8#T39mov r9 T40# r9#T40mov r10 T41# r10#T41mov
+            r11 T42# r11#T42mov T13 T43# T13#T43mov T7 T13# T7#T13mov T14 T7# T14#T7mov rbx T26# rbx#T26mov rbp T27#
+            rbp#T27mov rdi T28# rdi#T28mov rsi T29# rsi#T29mov r12 T30# r12#T30mov r13 T31# r13#T31mov r14 T32#
+            r14#T32mov r15 T33# r15#T33mov rax T14# rax#T14ret# #rax
+        </Body>
+    </Module>
+</ASM>

@@ -1,9 +1,9 @@
-int a = 1;
-int b = 2;
-{
-    int c = a + b;
-    boolean a = false;
-    c = c + 1 + b;
+
+int add(a:int, b:int,) {
+    return a + b;
 }
-boolean d = true;
-boolean c = d;
+
+int main() {
+    int x = add(1, 2,);
+    return x;
+}

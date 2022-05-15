@@ -1,10 +1,27 @@
 ;=;
+,=,
+:=:
+!=!
 int=(-1)?(0|[1-9][0-9]*)
 boolean=true|false
+if=if
+else=else
+while=while
+return=return
 id=[a-zA-Z][a-zA-Z_0-9]*
-eq==
+assign==
+eq===
+neq=!=
+lt=<
+gt=>
+leq=<=
+geq=>=
+&&=&&
+||=\|\|
 (=\(
 )=\)
+[=\[
+]=\]
 {={
 }=}
 +=\+
@@ -12,4 +29,4 @@ eq==
 *=\*
 /=\/
 @BLANK=[ \t\n\r]+
-@COMMENT=//
+@COMMENT=//[^\n]*|/\*([^\*]|\*[^/])*\*/

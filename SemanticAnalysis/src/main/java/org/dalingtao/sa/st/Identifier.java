@@ -1,10 +1,18 @@
 package org.dalingtao.sa.st;
 
+import org.dalingtao.Context;
+
 public class Identifier {
+    protected int seqId = Context.getInstance().nextId();
+
     protected String name;
     protected int id;
-    protected  boolean def;
-    protected  Scope scope;
+    protected boolean def;
+    protected Scope scope;
+
+    public int getSeqId() {
+        return seqId;
+    }
 
     public Scope getScope() {
         return scope;
@@ -36,5 +44,10 @@ public class Identifier {
 
     public void setDef(boolean def) {
         this.def = def;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

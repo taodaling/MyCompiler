@@ -19,5 +19,9 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.dalingtao</groupId>
+            <artifactId>util</artifactId>
+        </dependency>
     </dependencies>
 </project>

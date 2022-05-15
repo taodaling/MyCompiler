@@ -1,5 +1,8 @@
 package org.dalingtao.re;
 
+import org.dalingtao.Context;
+import org.dalingtao.StringReader;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class REParser {
     String pattern;
-    int offset;
     static int[] escape;
 
     static {
@@ -24,19 +26,7 @@ public class REParser {
         escape['f'] = '\f';
     }
 
-    int read() {
-        if (offset >= pattern.length()) {
-            return -1;
-        }
-        return pattern.charAt(offset++);
-    }
-
-    int peek() {
-        if (offset >= pattern.length()) {
-            return -1;
-        }
-        return pattern.charAt(offset);
-    }
+    StringReader reader;
 
     List<State> all = new ArrayList<>();
 
@@ -105,19 +95,19 @@ public class REParser {
         return new SubGraph(state, state.to);
     }
 
-    void throwException(String s) {
-        throw new ParseCompileException("Unexpected token at " + offset + ": " + s);
+    void throwException() {
+        throw new REException(reader.toString());
     }
 
     void assertEq(int v) {
-        if (peek() != v) {
-            throwException("should be " + v + " but is " + peek());
+        if (reader.peek() != v) {
+            throwException();
         }
     }
 
     void assertNeq(int v) {
-        if (peek() == v) {
-            throwException("shouldn't be " + v);
+        if (reader.peek() == v) {
+            throwException();
         }
     }
 
@@ -141,7 +131,7 @@ public class REParser {
 
     <T> void assertNotEmpty(Collection<T> dq) {
         if (dq.isEmpty()) {
-            throwException("invalid state with empty precedent");
+            throwException();
         }
     }
 
@@ -153,8 +143,8 @@ public class REParser {
     }
 
     public NfaRE parse(String s) {
+        reader = new StringReader(s);
         this.pattern = s;
-        this.offset = 0;
         SubGraph g = parseSubGraph();
         NfaRE re = new NfaRE();
 
@@ -169,66 +159,66 @@ public class REParser {
     }
 
     private int readPlainWord() {
-        if (peek() == '\\') {
-            read();
+        if (reader.peek() == '\\') {
+            reader.read();
             assertNeq(-1);
-            return escape(read());
+            return escape(reader.read());
         }
         assertNeq(']');
-        return read();
+        return reader.read();
     }
 
     private SubGraph parseSubGraph() {
         Deque<SubGraph> dq = new LinkedList<>();
-        while (peek() != -1) {
-            if (peek() == '\\') {
-                read();
+        while (reader.peek() != -1) {
+            if (reader.peek() == '\\') {
+                reader.read();
                 assertNeq(-1);
-                dq.addLast(fromChar(escape(read())));
+                dq.addLast(fromChar(escape(reader.read())));
                 continue;
             }
-            if (peek() == '(') {
-                read();
+            if (reader.peek() == '(') {
+                reader.read();
                 dq.addLast(parseSubGraph());
                 assertEq(')');
-                read();
+                reader.read();
                 continue;
             }
-            if (peek() == ')') {
+            if (reader.peek() == ')') {
                 return concat(dq);
             }
-            if (peek() == '+') {
-                read();
+            if (reader.peek() == '+') {
+                reader.read();
                 assertNotEmpty(dq);
                 dq.addLast(atLeastOnce(dq.removeLast()));
                 continue;
             }
-            if (peek() == '*') {
-                read();
+            if (reader.peek() == '*') {
+                reader.read();
                 assertNotEmpty(dq);
                 dq.addLast(anytime(dq.removeLast()));
                 continue;
             }
-            if (peek() == '?') {
-                read();
+            if (reader.peek() == '?') {
+                reader.read();
                 assertNotEmpty(dq);
                 dq.addLast(maybe(dq.removeLast()));
                 continue;
             }
-            if (peek() == '[') {
-                read();
+            if (reader.peek() == '[') {
+                reader.read();
                 List<Integer> or = new ArrayList<>();
                 boolean exclude = false;
-                if (peek() == '^') {
+                if (reader.peek() == '^') {
                     exclude = true;
-                    read();
+                    reader.read();
                 }
-                while (peek() != -1) {
-                    if (peek() == ']') {
+                while (reader.peek() != -1) {
+                    if (reader.peek() == ']') {
                         break;
-                    } else if (peek() == '-') {
+                    } else if (reader.peek() == '-') {
                         assertNotEmpty(or);
-                        read();
+                        reader.read();
                         int last = readPlainWord();
                         int first = or.remove(or.size() - 1);
                         for (int i = first; i <= last; i++) {
@@ -239,7 +229,7 @@ public class REParser {
                     }
                 }
                 assertEq(']');
-                read();
+                reader.read();
                 int[] seq = or.stream().mapToInt(Integer::intValue).toArray();
                 if (exclude) {
                     dq.addLast(excludeChar(seq));
@@ -248,17 +238,17 @@ public class REParser {
                 }
                 continue;
             }
-            if (peek() == '.') {
-                read();
+            if (reader.peek() == '.') {
+                reader.read();
                 dq.addLast(anything());
                 continue;
             }
-            if (peek() == '|') {
-                read();
+            if (reader.peek() == '|') {
+                reader.read();
                 return or(concat(dq), parseSubGraph());
             }
             //normal
-            dq.addLast(fromChar(read()));
+            dq.addLast(fromChar(reader.read()));
         }
         return concat(dq);
     }

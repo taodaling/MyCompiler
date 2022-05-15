@@ -1,0 +1,90 @@
+:classPrefix=org.dalingtao.isa.abstractasm.
+# $ mean destination register name
+# Move$Temp(t, e: E_pression)
+# | mov t, e
+
+BinOp$Add(a, b)
+| mov {$} {a} : Copy
+| add {$} {b} : Bop
+
+BinOp$Sub(a, b)
+| mov {$} {a} : Copy
+| sub {$} {b} : Bop
+
+BinOp$Mul(a, b)
+| mov {$} {a} : Copy
+| mul {$} {b} : Bop
+
+BinOp$Div(a, b)
+| mov {$} {a} : Copy
+| div {$} {b} : Bop
+
+BinOp$LogicAnd(a, b)
+| cmp {a} 0 : Cmp0
+| setnz {$} : Set
+| cmp {b} 0 : Cmp0
+| setnz {$}A : Set
+| and {$} {$}A : Bop
+
+BinOp$LogicOr(a, b)
+| cmp {a} 0 : Cmp0
+| setnz {$} : Set
+| cmp {b} 0 : Cmp0
+| setnz {$}A : Set
+| or {$} {$}A : Bop
+
+BinOp$Eq(a, b)
+| cmp {a} {b} : Cmp
+| setz {$} : Set
+
+BinOp$Neq(a, b)
+| cmp {a} {b} : Cmp
+| setnz {$} : Set
+
+BinOp$Lt(a, b)
+| cmp {a} {b} : Cmp
+| setl {$} : Set
+
+BinOp$Gt(a, b)
+| cmp {a} {b} : Cmp
+| setg {$} : Set
+
+BinOp$Leq(a, b)
+| cmp {a} {b} : Cmp
+| setle {$} : Set
+
+BinOp$Geq(a, b)
+| cmp {a} {b} : Cmp
+| setge {$} : Set
+
+BinOp$Ult(a, b)
+| cmp {a} {b} : Cmp
+| setb {$} : Set
+
+Cjump(e, t, f)
+| test {e}, {e} : Cmp
+| jnz {t} : Cjmp
+
+Name($)
+
+Const(x)
+| mov {$} {x} : Set
+
+Jump(Name(l))
+| jmp {l} : Jmp
+
+Mem(e)
+| mov {$} [{e}] : Load
+
+Move$Temp(a, b)
+| mov {a} {b} : Copy
+
+Move$Mem(a, b)
+| mov [{a}] {b} : Store
+
+Temp($)
+
+UnaryOp$LogicNot(e)
+| test {e} {e} : Cmp
+| setz {$} : Set
+

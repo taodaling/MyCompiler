@@ -5,7 +5,10 @@
     T ans = null;
     for(var node : visitable) {
         if(node instanceof Visitable) {
-            ans = ((Visitable)node).accept(this);
+            var res = ((Visitable)node).accept(this);
+            if(ans == null) {
+                ans = res;
+            }
         }
     }
     return ans;
